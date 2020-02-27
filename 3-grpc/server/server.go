@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net"
 
@@ -27,20 +28,19 @@ func NewToDoList() *ToDoList {
 	}
 }
 
-/*
-To implement
 // GetTask returns a task
-func (t *ToDoList) GetTask(title string, reply *Task) error {
+func (t *ToDoList) GetTask(ctx context.Context, title *todo.Text) (*todo.Task, error) {
 	for i := range t.Tasks {
-		if t.Tasks[i].Title == title {
-			*reply = t.Tasks[i]
-			log.Printf("task found: %+v\n", reply)
-			return nil
+		if t.Tasks[i].Title == title.GetText() {
+			log.Printf("task found: %+v\n", t.Tasks[i])
+			return &todo.Task{
+				Done:  t.Tasks[i].Done,
+				Title: t.Tasks[i].Title,
+			}, nil
 		}
 	}
-	return fmt.Errorf("could not found task")
+	return nil, fmt.Errorf("could not found task")
 }
-*/
 
 // CreateTask adds the task to the list
 func (t *ToDoList) CreateTask(ctx context.Context, title *todo.Text) (*todo.Task, error) {
@@ -54,19 +54,16 @@ func (t *ToDoList) CreateTask(ctx context.Context, title *todo.Text) (*todo.Task
 	}, nil
 }
 
-/*
-To implement
 // CompleteTask marks task as done
-func (t *ToDoList) CompleteTask(title string, reply *Task) error {
+func (t *ToDoList) CompleteTask(ctx context.Context, title *todo.Text) (*todo.TaskList, error) {
+
 	for i, task := range t.Tasks {
-		if task.Title == title {
+		if task.Title == title.GetText() {
 			t.Tasks[i].Done = true
-			return nil
 		}
 	}
-	return fmt.Errorf("could not found task")
+	return t.GetTasks(ctx, nil)
 }
-*/
 
 // GetTasks returns the ToDo list tasks
 func (t *ToDoList) GetTasks(ctx context.Context, _ *todo.Void) (*todo.TaskList, error) {

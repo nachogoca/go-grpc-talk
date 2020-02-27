@@ -29,6 +29,20 @@ func main() {
 	}
 	printTasks(list)
 
+	list, err = client.CompleteTask(context.Background(), &todo.Text{Text: "cheese"})
+	if err != nil {
+		log.Fatalf("could not list tasks: %v", err)
+	}
+	printTasks(list)
+
+	t, err := client.GetTask(context.Background(), &todo.Text{Text: "milk"})
+	if err != nil {
+		log.Fatalf("could not find task %v", err)
+	} else {
+		log.Println(t.GetTitle())
+		log.Println(t.GetDone())
+	}
+
 }
 
 func createTask(client todo.TodoClient, task string) {
